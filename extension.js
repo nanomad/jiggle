@@ -20,6 +20,8 @@ import * as SpotlightEffect from './effects/SpotlightEffect.js';
 import * as TrailEffect from './effects/TrailEffect.js';
 
 const INTERVAL_MS = 10;
+// shake detection compares distances between samples, so it needs sparser samples than the effects loop
+const SAMPLE_MS = 50;
 
 export default class JiggleExtension extends Extension {
     enable() {
@@ -29,6 +31,7 @@ export default class JiggleExtension extends Extension {
             this._effectID = null;
             this._intervals = [];
             this._jiggling = false;
+            this._lastSample = 0;
 
             // connect to the settings and update the application
             this._settings = this.getSettings();
@@ -38,7 +41,11 @@ export default class JiggleExtension extends Extension {
             // GNOME Shell 51 removed the pointer watcher, so poll the pointer position instead
             this._intervals.push(GLib.timeout_add(GLib.PRIORITY_DEFAULT, INTERVAL_MS, () => {
                 const [x, y] = global.get_pointer();
-                JHistory.push(x, y);
+                const now = GLib.get_monotonic_time() / 1000;
+                if (now - this._lastSample >= SAMPLE_MS) {
+                    this._lastSample = now;
+                    JHistory.push(x, y);
+                }
 
                 if (JHistory.check()) {
                     if (!this._jiggling) {
@@ -56,7 +63,7 @@ export default class JiggleExtension extends Extension {
                     }
                 }
 
-                if (this._effect) this._effect.run(JHistory.state.lastX, JHistory.state.lastY);
+                if (this._effect) this._effect.run(x, y);
 
                 return GLib.SOURCE_CONTINUE;
             }));

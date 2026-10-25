@@ -18,11 +18,7 @@ export function check()
     let now = new Date().getTime();
 
     // prune stale buffer
-    for (let i = 0; i < history.length; ++i) {
-        if (now - history[i].t > HISTORY_MAX) {
-            history.splice(i, 1);
-        }
-    }
+    history = history.filter(h => now - h.t <= HISTORY_MAX);
 
     // reset degrees so we can add them again
     let degrees = 0;
