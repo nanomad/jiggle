@@ -10,7 +10,7 @@ build:
 	@zip -r jiggle_${JIGGLE_VERSION}.zip ${JIGGLE_PKG_LIST}
 
 test:
-	@LD_LIBRARY_PATH=/usr/lib/gnome-shell gjs --include-path=. test.js
+	@gjs -m test.js
 
 docker: docker_centos docker_debian docker_fedora
 
