@@ -1,3 +1,4 @@
+import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
 
@@ -40,6 +41,26 @@ export function systemCursorHotspot()
         return [x, y];
     } catch (e) {
         return [0, 0];
+    }
+}
+
+/**
+ * Snapshot of the current system cursor image as an actor content, or null if unavailable.
+ * Must be called while the pointer is visible.
+ *
+ * @return {{content: Clutter.Content, size: number}|null}
+ */
+export function systemCursorContent()
+{
+    try {
+        const sprite = tracker().get_sprite();
+        if (!sprite) return null;
+        return {
+            content: Clutter.TextureContent.new_from_texture(sprite, null),
+            size: Math.max(sprite.get_width(), sprite.get_height()),
+        };
+    } catch (e) {
+        return null;
     }
 }
 

@@ -1,3 +1,4 @@
+import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
@@ -90,6 +91,7 @@ const ScalingIcon = GObject.registerClass({
                     break;
             }
             this.set_icon_size(this.current_size);
+            this.set_size(this.current_size, this.current_size);
 
             // handle icon positioning
             let r = this.current_size / this.system_cursor_size;
@@ -100,12 +102,29 @@ const ScalingIcon = GObject.registerClass({
         }
     }
 
-    start() {
-        if (!this.system_cursor) {
-            // Gdk is not available in the shell process, so use the configured cursor size
-            this.system_cursor = true;
+    /**
+     * Pick the bundled cursor or a snapshot of the system cursor, depending on the settings.
+     */
+    _applyCursorImage() {
+        const system = this.use_system ? Cursor.systemCursorContent() : null;
+        if (system) {
+            this.gicon = null;
+            this.content = system.content;
+            this.content_gravity = Clutter.ContentGravity.RESIZE_ASPECT;
+            this.system_cursor_size = system.size;
+        } else {
+            this.content = null;
+            this.gicon = this.custom_cursor;
             this.system_cursor_size = Cursor.systemCursorSize();
-            this.current_size = this.system_cursor_size;
+        }
+        this.current_size = this.system_cursor_size;
+    }
+
+    start() {
+        // only refresh the image while idle: mid-animation the real pointer is already hidden
+        if (!this.get_parent()) {
+            this.system_cursor = true;
+            this._applyCursorImage();
             const [xhot, yhot] = Cursor.systemCursorHotspot();
             this.cursor_xhot = xhot;
             this.cursor_yhot = yhot;
@@ -140,8 +159,10 @@ const ScalingIcon = GObject.registerClass({
         this.hide_cursor = settings.get_value('hide-original').deep_unpack();
         this.growth_speed = Math.max(0.1, Math.min(1.0, parseFloat(settings.get_value('growth-speed').deep_unpack())));
         this.shrink_speed = Math.max(0.1, Math.min(1.0, parseFloat(settings.get_value('shrink-speed').deep_unpack())));
-        // the system cursor image can't be read from the shell process, so always use the bundled one
-        this.gicon = this.custom_cursor;
+        if (!this.use_system) {
+            this.content = null;
+            this.gicon = this.custom_cursor;
+        }
     }
 });
 
