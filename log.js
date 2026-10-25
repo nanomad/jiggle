@@ -13,10 +13,10 @@ const LOG_LEVELS = [
     LOG_DEBUG,
 ];
 
-let LogLevel = 7
+let LogLevel = LOG_WARNING
 
 export function isAtLevel(level) {
-    return level | LogLevel == level;
+    return (LogLevel & level) === level;
 }
 
 export function logDebug(e) {
@@ -36,5 +36,5 @@ export function logWarning(e) {
 }
 
 export function setLogLevel(level) {
-    LogLevel = LOG_LEVELS[level];
+    LogLevel = LOG_LEVELS[level] ?? LOG_WARNING;
 }
