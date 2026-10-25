@@ -1,8 +1,8 @@
 {
-    "uuid": "jiggle@jeffchannell.com",
-    "name": "Jiggle",
-    "description": "Jiggle is a Gnome Shell extension that highlights the cursor position when the mouse is moved rapidly.",
-    "url": "https://github.com/jeffchannell/jiggle",
+    "uuid": "jiggle-fork@nanomad",
+    "name": "Jiggle (GNOME 45+)",
+    "description": "Highlights the cursor position when the mouse is moved rapidly. A fork of Jiggle ported to GNOME Shell 45-51.",
+    "url": "https://github.com/nanomad/jiggle",
     "shell-version": [
         "45",
         "46",

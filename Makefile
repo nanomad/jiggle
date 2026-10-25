@@ -7,7 +7,7 @@ JIGGLE_PKG_LIST := effects/ icons/ schemas/ ui/ cursor.js extension.js history.j
 
 build:
 	@rm jiggle_${JIGGLE_VERSION}.zip 2> /dev/null || true
-	@zip -r jiggle_${JIGGLE_VERSION}.zip ${JIGGLE_PKG_LIST}
+	@zip -r jiggle_${JIGGLE_VERSION}.zip ${JIGGLE_PKG_LIST} -x "schemas/gschemas.compiled" "ui/gtk3.ui"
 
 test:
 	@gjs -m test.js
