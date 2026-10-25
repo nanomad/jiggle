@@ -1,18 +1,24 @@
 import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
 
+let inhibited = false;
+
+function tracker()
+{
+    // Meta.CursorTracker.get_for_display() was removed in newer shells
+    return global.backend?.get_cursor_tracker?.() ?? Meta.CursorTracker.get_for_display(global.display);
+}
+
 export function setPointerVisible(toggle)
 {
-    const tracker = Meta.CursorTracker.get_for_display(global.display);
-    try {
-        const seat = global.stage.context.get_backend().get_default_seat();
-        if (!seat.is_unfocus_inhibited()) {
-            seat.inhibit_unfocus();
-        }
-    } catch (e) {
-        // not fatal, the pointer can still be toggled
+    const t = tracker();
+    if (!toggle && !inhibited) {
+        t.inhibit_cursor_visibility();
+        inhibited = true;
+    } else if (toggle && inhibited) {
+        t.uninhibit_cursor_visibility();
+        inhibited = false;
     }
-    tracker.set_pointer_visible(!!toggle);
 }
 
 /**
@@ -30,7 +36,7 @@ export function systemCursorSize()
 export function systemCursorHotspot()
 {
     try {
-        const [x, y] = Meta.CursorTracker.get_for_display(global.display).get_hot();
+        const [x, y] = tracker().get_hot();
         return [x, y];
     } catch (e) {
         return [0, 0];

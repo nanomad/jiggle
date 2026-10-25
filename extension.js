@@ -47,7 +47,8 @@ export default class JiggleExtension extends Extension {
                     JHistory.push(x, y);
                 }
 
-                if (JHistory.check()) {
+                const shaking = JHistory.check();
+                if (shaking) {
                     if (!this._jiggling) {
                         this._jiggling = true;
                         if (this._effect) {
