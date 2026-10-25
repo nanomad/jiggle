@@ -2,6 +2,10 @@ import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
 
+import {PACKAGE_VERSION} from 'resource:///org/gnome/shell/misc/config.js';
+
+const SHELL_MAJOR = Number.parseInt(PACKAGE_VERSION.split('.')[0], 10);
+
 let inhibited = false;
 
 function tracker()
@@ -13,7 +17,7 @@ function tracker()
 export function setPointerVisible(toggle)
 {
     const t = tracker();
-    if (typeof t.inhibit_cursor_visibility !== 'function') {
+    if (SHELL_MAJOR < 49) {
         // GNOME 45-48: set_pointer_visible() is still the way to do it
         t.set_pointer_visible(!!toggle);
         return;
