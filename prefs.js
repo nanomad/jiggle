@@ -53,7 +53,8 @@ const PrefsWidget = GObject.registerClass({
         // set the main effect combobox value
         this._effect.set_active(effect);
         this._shake_threshold.set_value(this._settings.get_value('shake-threshold').deep_unpack());
-        this._log_level.set_active(this._settings.get_value('log-level').deep_unpack());
+        // older versions defaulted to 7, which is not one of the dropdown entries
+        this._log_level.set_active(Math.min(this._settings.get_value('log-level').deep_unpack(), 4));
         this._use_system.set_active(this._settings.get_value('use-system').deep_unpack());
         this._hide_original.set_active(this._settings.get_value('hide-original').deep_unpack());
         this._growth_speed.set_value(this._settings.get_value('growth-speed').deep_unpack());
