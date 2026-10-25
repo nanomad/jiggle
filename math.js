@@ -1,4 +1,3 @@
-'use strict';
 
 /**
  * Get distance between two points
@@ -8,7 +7,7 @@
  * 
  * @return {Number}
  */
-function distance(p1, p2) {
+export function distance(p1, p2) {
     return Math.sqrt(Math.pow(p2.x-p1.x,2)+Math.pow(p2.y-p1.y,2));
 }
 
@@ -21,7 +20,7 @@ function distance(p1, p2) {
  * 
  * @return {Number}
  */
-function gamma(st, nd, rd) {
+export function gamma(st, nd, rd) {
     // pythagoras
     var a = Math.sqrt(Math.pow(st.x-nd.x,2)+Math.pow(st.y-nd.y,2));
     var b = Math.sqrt(Math.pow(nd.x-rd.x,2)+Math.pow(nd.y-rd.y,2));
@@ -35,7 +34,7 @@ function gamma(st, nd, rd) {
 }
 
 // Next finds the number that satifies the golden ratio using the length of a segment AS for the base
-function gr_next(a, s) {
+export function gr_next(a, s) {
 	// Dividing a line segment by exterior division
 	// 1. Draw a line segment AS and construct off the point S a segment SC perpendicular to AS and with the same length as AS.
 	// get the distance between the two "points" (a,0) and (b,0)
@@ -54,7 +53,7 @@ function gr_next(a, s) {
 }
 
 // Ratio finds the golden ratio between two numbers a and b
-function gr(a, b) {
+export function gr(a, b) {
 	// use interior division to find c
 	// 1. Having a line segment AB, construct a perpendicular BC at point B, with BC half the length of AB. Draw the hypotenuse AC.
 	// get the distance between the two "points" (a,0) and (b,0)
