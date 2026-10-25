@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- rebuild: glib-compile-schemas schemas/ -->
 <schemalist>
-    <schema id="org.gnome.shell.extensions.jiggle" path="/org/gnome/shell/extensions/jiggle/">
+    <schema id="org.gnome.shell.extensions.jiggle-reloaded" path="/org/gnome/shell/extensions/jiggle-reloaded/">
         <!-- See also: https://developer.gnome.org/glib/stable/gvariant-format-strings.html -->
         <!-- Which effect to use -->
         <key name="effect" type="i">

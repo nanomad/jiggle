@@ -5,7 +5,7 @@ let suite = new gjsunit.Suite("settings schema");
 
 suite.addTest("schema loads", function() {
     const source = Gio.SettingsSchemaSource.new_from_directory('schemas', Gio.SettingsSchemaSource.get_default(), false);
-    const schema = source.lookup('org.gnome.shell.extensions.jiggle', true);
+    const schema = source.lookup('org.gnome.shell.extensions.jiggle-reloaded', true);
     gjsunit.assertNotNull(schema);
     const s = new Gio.Settings({settings_schema: schema});
     gjsunit.assertEquals('function', typeof s.connect);

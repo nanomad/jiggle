@@ -1,6 +1,6 @@
 {
     "uuid": "jiggle-fork@nanomad",
-    "name": "Jiggle (GNOME 45+)",
+    "name": "Jiggle Reloaded",
     "description": "Highlights the cursor position when the mouse is moved rapidly. A fork of Jiggle ported to GNOME Shell 45-51.",
     "url": "https://github.com/nanomad/jiggle",
     "shell-version": [
@@ -12,6 +12,6 @@
         "50",
         "51"
     ],
-    "version": 10,
-    "settings-schema": "org.gnome.shell.extensions.jiggle"
+    "version": 11,
+    "settings-schema": "org.gnome.shell.extensions.jiggle-reloaded"
 }
