@@ -6,13 +6,19 @@ let inhibited = false;
 
 function tracker()
 {
-    // Meta.CursorTracker.get_for_display() was removed in newer shells
+    // Meta.CursorTracker.get_for_display() was replaced by global.backend.get_cursor_tracker() in GNOME 48
     return global.backend?.get_cursor_tracker?.() ?? Meta.CursorTracker.get_for_display(global.display);
 }
 
 export function setPointerVisible(toggle)
 {
     const t = tracker();
+    if (typeof t.inhibit_cursor_visibility !== 'function') {
+        // GNOME 45-48: set_pointer_visible() is still the way to do it
+        t.set_pointer_visible(!!toggle);
+        return;
+    }
+    // GNOME 49+: set_pointer_visible() was replaced by an inhibit/uninhibit pair
     if (!toggle && !inhibited) {
         t.inhibit_cursor_visibility();
         inhibited = true;
