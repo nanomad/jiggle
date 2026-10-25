@@ -29,7 +29,8 @@ export default class JiggleExtension extends Extension {
             JLog.logInfo('Jiggle enable');
             this._effect = null;
             this._effectID = null;
-            this._intervals = [];
+            this._pollId = null;
+            this._renderId = null;
             this._jiggling = false;
             this._lastSample = 0;
 
@@ -39,7 +40,7 @@ export default class JiggleExtension extends Extension {
             this._update();
 
             // GNOME Shell 51 removed the pointer watcher, so poll the pointer position instead
-            this._intervals.push(GLib.timeout_add(GLib.PRIORITY_DEFAULT, INTERVAL_MS, () => {
+            this._pollId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, INTERVAL_MS, () => {
                 const [x, y] = global.get_pointer();
                 const now = GLib.get_monotonic_time() / 1000;
                 if (now - this._lastSample >= SAMPLE_MS) {
@@ -67,11 +68,11 @@ export default class JiggleExtension extends Extension {
                 if (this._effect) this._effect.run(x, y);
 
                 return GLib.SOURCE_CONTINUE;
-            }));
-            this._intervals.push(GLib.timeout_add(GLib.PRIORITY_DEFAULT, 34, () => {
+            });
+            this._renderId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 34, () => {
                 if (this._effect) this._effect.render();
                 return GLib.SOURCE_CONTINUE;
-            }));
+            });
         } catch (e) {
             // ensure we clean up any leftovers if there's a problem!
             this.disable();
@@ -85,8 +86,14 @@ export default class JiggleExtension extends Extension {
         this._jiggling = false;
         JHistory.clear();
         // stop the intervals
-        (this._intervals ?? []).forEach(i => GLib.source_remove(i));
-        this._intervals = [];
+        if (this._pollId) {
+            GLib.source_remove(this._pollId);
+            this._pollId = null;
+        }
+        if (this._renderId) {
+            GLib.source_remove(this._renderId);
+            this._renderId = null;
+        }
         // stop and drop the current effect
         if (this._effect) {
             this._effect.destroy();
